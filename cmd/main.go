@@ -35,6 +35,7 @@ func addFlags(s *server.Server, fs *pflag.FlagSet) {
 	fs.BoolVar(&s.Verbose, "verbose", false, "Verbose")
 	fs.BoolVar(&s.Version, "version", false, "Print the version and exits")
 	fs.StringVar(&s.DefaultScopes, "default-scopes", s.DefaultScopes, "Fallback scopes to use when annotation is not set")
+	fs.StringVar(&s.DefaultProject, "default-project", s.DefaultProject, "Fallback project id to use when service account annotation is given without an associated project id")
 }
 
 func main() {
