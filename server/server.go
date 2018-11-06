@@ -47,6 +47,7 @@ type Server struct {
 	IAMScopeKey           string
 	DefaultServiceAccount string
 	DefaultScopes         string
+	DefaultProject        string
 	MetadataAddress       string
 	HostInterface         string
 	HostIP                string
@@ -383,7 +384,7 @@ func (s *Server) Run(host, token, nodeName string, insecure bool) error {
 	}
 	s.k8s = k
 	s.iam = iam.NewClient()
-	s.serviceAccountMapper = mappings.NewServiceAccountMapper(s.IAMServiceAccountKey, s.IAMScopeKey, s.DefaultServiceAccount, s.DefaultScopes, s.NamespaceRestriction, s.NamespaceKey, s.k8s)
+	s.serviceAccountMapper = mappings.NewServiceAccountMapper(s.IAMServiceAccountKey, s.IAMScopeKey, s.DefaultServiceAccount, s.DefaultScopes, s.DefaultProject, s.NamespaceRestriction, s.NamespaceKey, s.k8s)
 	podSynched := s.k8s.WatchForPods(saassigner.NewPodHandler(s.IAMServiceAccountKey))
 	namespaceSynched := s.k8s.WatchForNamespaces(saassigner.NewNamespaceHandler(s.NamespaceKey))
 

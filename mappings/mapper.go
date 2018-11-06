@@ -14,6 +14,7 @@ import (
 type ServiceAccountMapper struct {
 	defaultServiceAccount string
 	defaultScopes         string
+	defaultProject        string
 	iamServiceAccountKey  string
 	iamScopeKey           string
 	namespaceKey          string
@@ -75,6 +76,13 @@ func (r *ServiceAccountMapper) extractServiceAccount(pod *v1.Pod) (string, error
 	if !annotationPresent {
 		log.Warnf("Using fallback service account for IP %s", pod.Status.PodIP)
 		serviceAccount = r.defaultServiceAccount
+	}
+
+	if !strings.Contains(serviceAccount, "@") {
+		if r.defaultProject == "" {
+			return "", fmt.Errorf("Invalid service account for IP %s: Must be of form USER@HOST, eg. NAME@PROJECT_ID.iam.gserviceaccount.com", pod.Status.PodIP)
+		}
+		serviceAccount = fmt.Sprintf("%s@%s.iam.gserviceaccount.com", serviceAccount, r.defaultProject)
 	}
 
 	return serviceAccount, nil
@@ -151,10 +159,11 @@ func (r *ServiceAccountMapper) DumpDebugInfo() map[string]interface{} {
 }
 
 // NewServiceAccountMapper returns a new ServiceAccountMapper for use.
-func NewServiceAccountMapper(serviceAccountKey string, scopeKey string, defaultServiceAccount string, defaultScopes string, namespaceRestriction bool, namespaceKey string, kubeStore store) *ServiceAccountMapper {
+func NewServiceAccountMapper(serviceAccountKey string, scopeKey string, defaultServiceAccount string, defaultScopes string, defaultProject string, namespaceRestriction bool, namespaceKey string, kubeStore store) *ServiceAccountMapper {
 	return &ServiceAccountMapper{
 		defaultServiceAccount: defaultServiceAccount,
 		defaultScopes:         defaultScopes,
+		defaultProject:        defaultProject,
 		iamServiceAccountKey:  serviceAccountKey,
 		iamScopeKey:           scopeKey,
 		namespaceKey:          namespaceKey,

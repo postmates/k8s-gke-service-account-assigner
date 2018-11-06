@@ -217,6 +217,7 @@ Usage of ./k8s-gke-service-account-assigner:
       --debug                               Enable debug features
       --default-scopes string               Fallback scopes to use when annotation is not set
       --default-service-account string      Fallback service account to use when annotation is not set
+      --default-project                     Fallback project id to use when service account annotation is given without an associated project id
       --host-interface string               Host interface for proxying google compute engine metadata (default "eth0")
       --host-ip string                      IP address of host
       --iam-role-key string                 Pod annotation key used to retrieve the IAM role (default "accounts.google.com/service-account")
